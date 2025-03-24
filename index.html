@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 300px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: white;
+        }
+
+        input {
+            width: 90%;
+            margin: 5px 0;
+            padding: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .google-button {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Login</h2>
+        <p id="error-message" class="error-message"></p>
+
+        <input type="email" id="email" placeholder="Enter your email">
+        <input type="password" id="password" placeholder="Enter your password">
+
+        <button onclick="login()">Login</button>
+        <button onclick="signUp()">Sign Up</button>
+
+        <hr>
+
+        <button class="google-button" onclick="loginWithGoogle()">Continue with Google</button>
+    </div>
+
+    <!-- ✅ Firebase v9+ uses ES modules, so we must use type="module" -->
+    <script type="module">
+        // Import Firebase functions (modular syntax)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+
+        // Firebase Configuration (Replace with your details)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCuOpldaWyUUKYsLkfPcRAZ5xDfanQqI6s",
+            authDomain: "login-126fa.firebaseapp.com",
+            projectId: "login-126fa",
+            storageBucket: "login-126fa.appspot.com",
+            messagingSenderId: "126933818564",
+            appId: "1:126933818564:web:fd20f412886e4f97e8fd91"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // Login Function
+        window.login = function () {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    alert("Logged in successfully!");
+                })
+                .catch(error => {
+                    errorMessage.textContent = error.message;
+                });
+        };
+
+        // Signup Function
+        window.signUp = function () {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    alert("Account created successfully!");
+                })
+                .catch(error => {
+                    errorMessage.textContent = error.message;
+                });
+        };
+
+        // Google Login Function
+        window.loginWithGoogle = function () {
+            signInWithPopup(auth, provider)
+                .then(() => {
+                    alert("Logged in with Google!");
+                })
+                .catch(error => {
+                    document.getElementById("error-message").textContent = error.message;
+                });
+        };
+    </script>
+
+</body>
+</html>
